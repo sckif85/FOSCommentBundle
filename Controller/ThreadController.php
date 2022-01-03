@@ -13,6 +13,7 @@ namespace FOS\CommentBundle\Controller;
 
 use FOS\CommentBundle\Model\CommentInterface;
 use FOS\CommentBundle\Model\ThreadInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Restful controller for the Threads.
+ * @Rest\Route("/threads")
  *
  * @author Alexander <iam.asm89@gmail.com>
  */
@@ -33,6 +35,7 @@ class ThreadController extends AbstractController
 
     /**
      * Presents the form to use to create a new Thread.
+     * @Rest\Route("/new.{_format}", name="new_threads", methods={"GET"})
      *
      * @return View
      */
@@ -49,6 +52,7 @@ class ThreadController extends AbstractController
 
     /**
      * Gets the thread for a given id.
+     * @Rest\Route("/{id}.{_format}", name="get_thread", methods={"GET"})
      *
      * @param string $id
      *
@@ -71,6 +75,7 @@ class ThreadController extends AbstractController
 
     /**
      * Gets the threads for the specified ids.
+     * @Rest\Route(".{_format}", name="get_threads", methods={"GET"})
      *
      * @param Request $request
      *
@@ -94,6 +99,7 @@ class ThreadController extends AbstractController
 
     /**
      * Creates a new Thread from the submitted data.
+     * @Rest\Route(".{_format}", name="post_threads", methods={"POST"})
      *
      * @param Request $request The current request
      *
@@ -123,6 +129,7 @@ class ThreadController extends AbstractController
 
     /**
      * Get the edit form the open/close a thread.
+     * @Rest\Route("/{id}/commentable/edit.{_format}", name="edit_thread_commentable", methods={"GET"})
      *
      * @param Request $request Current request
      * @param mixed   $id      Thread id
@@ -152,6 +159,7 @@ class ThreadController extends AbstractController
 
     /**
      * Edits the thread.
+     * @Rest\Route("/{id}/commentable.{_format}", name="patch_thread_commentable", methods={"PATCH"})
      *
      * @param Request $request Currently request
      * @param mixed   $id      Thread id
@@ -182,6 +190,7 @@ class ThreadController extends AbstractController
 
     /**
      * Presents the form to use to create a new Comment for a Thread.
+     * @Rest\Route("/{id}/comments/new.{_format}", name="new_thread_comments", methods={"GET"})
      *
      * @param Request $request
      * @param string  $id
@@ -217,6 +226,7 @@ class ThreadController extends AbstractController
 
     /**
      * Get a comment of a thread.
+     * @Rest\Route("/{id}/comments/{commentId}.{_format}", name="get_thread_comment", methods={"GET"})
      *
      * @param string $id        Id of the thread
      * @param mixed  $commentId Id of the comment
@@ -247,6 +257,7 @@ class ThreadController extends AbstractController
 
     /**
      * Get the delete form for a comment.
+     * @Rest\Route("/{id}/comments/{commentId}/remove.{_format}", name="remove_thread_comment", methods={"GET"})
      *
      * @param Request $request   Current request
      * @param string  $id        Id of the thread
@@ -277,6 +288,7 @@ class ThreadController extends AbstractController
 
     /**
      * Edits the comment state.
+     * @Rest\Route("/{id}/comments/{commentId}/state.{_format}", name="patch_thread_comment_state", methods={"PATCH"})
      *
      * @param Request $request   Current request
      * @param mixed   $id        Thread id
@@ -309,7 +321,8 @@ class ThreadController extends AbstractController
 
     /**
      * Presents the form to use to edit a Comment for a Thread.
-     *
+     * @Rest\Route("/{id}/comments/{commentId}/edit.{_format}", name="edit_thread_comment", methods={"GET"})
+     * 
      * @param string $id        Id of the thread
      * @param mixed  $commentId Id of the comment
      *
@@ -339,6 +352,7 @@ class ThreadController extends AbstractController
 
     /**
      * Edits a given comment.
+     * @Rest\Route("/{id}/comments/{commentId}.{_format}", name="put_thread_comments", methods={"PUT"})
      *
      * @param Request $request   Current request
      * @param string  $id        Id of the thread
@@ -372,6 +386,7 @@ class ThreadController extends AbstractController
 
     /**
      * Get the comments of a thread. Creates a new thread if none exists.
+     * @Rest\Route("/{id}/comments.{_format}", name="get_thread_comments", methods={"PUT"})
      *
      * @param Request $request Current request
      * @param string  $id      Id of the thread
@@ -457,6 +472,7 @@ class ThreadController extends AbstractController
 
     /**
      * Creates a new Comment for the Thread from the submitted data.
+     * @Rest\Route("/{id}/comments.{_format}", name="post_thread_comments", methods={"POST"})
      *
      * @param Request $request The current request
      * @param string  $id      The id of the thread
@@ -495,6 +511,7 @@ class ThreadController extends AbstractController
 
     /**
      * Get the votes of a comment.
+     * @Rest\Route("/{id}/comments/{commentId}/votes.{_format}", name="get_thread_comment_votes", methods={"GET"})
      *
      * @param string $id        Id of the thread
      * @param mixed  $commentId Id of the comment
@@ -521,6 +538,7 @@ class ThreadController extends AbstractController
 
     /**
      * Presents the form to use to create a new Vote for a Comment.
+     * @Rest\Route("/{id}/comments/{commentId}/votes/new.{_format}", name="new_thread_comment_votes", methods={"GET"})
      *
      * @param Request $request   Current request
      * @param string  $id        Id of the thread
@@ -556,6 +574,7 @@ class ThreadController extends AbstractController
 
     /**
      * Creates a new Vote for the Comment from the submitted data.
+     * @Rest\Route("/{id}/comments/{commentId}/votes.{_format}", name="post_thread_comment_votes", methods={"POST"})
      *
      * @param Request $request   Current request
      * @param string  $id        Id of the thread
