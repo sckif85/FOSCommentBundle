@@ -11,12 +11,11 @@
 
 namespace FOS\CommentBundle\Model;
 
-use FOS\CommentBundle\Event\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use FOS\CommentBundle\Event\VoteEvent;
 use FOS\CommentBundle\Event\VotePersistEvent;
 use FOS\CommentBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\LegacyEventDispatcherProxy;
 
 /**
  * Abstract VotingManager.
@@ -25,19 +24,11 @@ use Symfony\Component\EventDispatcher\LegacyEventDispatcherProxy;
  */
 abstract class VoteManager implements VoteManagerInterface
 {
-    /**
-     * @var
-     */
-    protected $dispatcher;
+    protected EventDispatcherInterface $dispatcher;
 
-    /**
-     * Constructor.
-     *
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
-     */
     public function __construct(EventDispatcherInterface $dispatcher)
     {
-        $this->dispatcher = class_exists(LegacyEventDispatcherProxy::class) ? LegacyEventDispatcherProxy::decorate($dispatcher) : $dispatcher;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -62,7 +53,7 @@ abstract class VoteManager implements VoteManagerInterface
     public function createVote(VotableCommentInterface $comment)
     {
         $class = $this->getClass();
-        $vote = new $class();
+        $vote  = new $class();
         $vote->setComment($comment);
 
         $event = new VoteEvent($vote);
@@ -99,14 +90,7 @@ abstract class VoteManager implements VoteManagerInterface
      */
     protected function dispatch(Event $event, $eventName)
     {
-        // LegacyEventDispatcherProxy exists in Symfony >= 4.3
-        if (class_exists(LegacyEventDispatcherProxy::class)) {
-            // New Symfony 4.3 EventDispatcher signature
-            $this->dispatcher->dispatch($event, $eventName);
-        } else {
-            // Old EventDispatcher signature
-            $this->dispatcher->dispatch($eventName, $event);
-        }
+        $this->dispatcher->dispatch($event, $eventName);
     }
 
     /**

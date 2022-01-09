@@ -11,11 +11,10 @@
 
 namespace FOS\CommentBundle\Model;
 
-use FOS\CommentBundle\Event\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use FOS\CommentBundle\Event\ThreadEvent;
 use FOS\CommentBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\LegacyEventDispatcherProxy;
 
 /**
  * Abstract Thread Manager implementation which can be used as base class for your
@@ -25,17 +24,14 @@ use Symfony\Component\EventDispatcher\LegacyEventDispatcherProxy;
  */
 abstract class ThreadManager implements ThreadManagerInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
+    protected EventDispatcherInterface $dispatcher;
 
     /**
      * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(EventDispatcherInterface $dispatcher)
     {
-        $this->dispatcher = class_exists(LegacyEventDispatcherProxy::class) ? LegacyEventDispatcherProxy::decorate($dispatcher) : $dispatcher;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -57,7 +53,7 @@ abstract class ThreadManager implements ThreadManagerInterface
      */
     public function createThread($id = null)
     {
-        $class = $this->getClass();
+        $class  = $this->getClass();
         $thread = new $class();
 
         if (null !== $id) {
@@ -92,14 +88,7 @@ abstract class ThreadManager implements ThreadManagerInterface
      */
     protected function dispatch(Event $event, $eventName)
     {
-        // LegacyEventDispatcherProxy exists in Symfony >= 4.3
-        if (class_exists(LegacyEventDispatcherProxy::class)) {
-            // New Symfony 4.3 EventDispatcher signature
-            $this->dispatcher->dispatch($event, $eventName);
-        } else {
-            // Old EventDispatcher signature
-            $this->dispatcher->dispatch($eventName, $event);
-        }
+        $this->dispatcher->dispatch($event, $eventName);
     }
 
     /**

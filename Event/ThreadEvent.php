@@ -11,6 +11,7 @@
 
 namespace FOS\CommentBundle\Event;
 
+use Symfony\Contracts\EventDispatcher\Event;
 use FOS\CommentBundle\Model\ThreadInterface;
 
 /**

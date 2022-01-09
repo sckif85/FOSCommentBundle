@@ -14,12 +14,12 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="fos_comment.controller.thread" class="FOS\CommentBundle\Controller\ThreadController">
+        <service id="FOS\CommentBundle\Controller\ThreadController"
+                   autowire="true"
+                   autoconfigure="true">
             <tag name="controller.service_arguments" />
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
         </service>
-    </services>
 
+        <service id="fos_comment.controller.thread" alias="FOS\CommentBundle\Controller\ThreadController"/>
+    </services>
 </container>

@@ -25,6 +25,8 @@
             <argument>%fos_comment.form.comment.name%</argument>
         </service>
 
+        <service id="FOS\CommentBundle\FormFactory\CommentFormFactoryInterface" alias="fos_comment.form_factory.comment.default"/>
+
         <service id="fos_comment.form_type.commentable_thread.default" class="FOS\CommentBundle\Form\CommentableThreadType">
             <argument>%fos_comment.model.thread.class%</argument>
             <tag name="form.type" alias="fos_comment_commentable_thread" extended-type="FOS\CommentBundle\Form\CommentableThreadType" />
@@ -35,6 +37,8 @@
             <argument>%fos_comment.form.commentable_thread.type%</argument>
             <argument>%fos_comment.form.commentable_thread.name%</argument>
         </service>
+
+        <service id="FOS\CommentBundle\FormFactory\CommentableThreadFormFactoryInterface" alias="fos_comment.form_factory.commentable_thread.default"/>
 
         <service id="fos_comment.form_type.delete_comment.default" class="FOS\CommentBundle\Form\DeleteCommentType">
             <argument>%fos_comment.model.comment.class%</argument>
@@ -47,6 +51,8 @@
             <argument>%fos_comment.form.delete_comment.name%</argument>
         </service>
 
+        <service id="FOS\CommentBundle\FormFactory\DeleteCommentFormFactoryInterface" alias="fos_comment.form_factory.delete_comment.default"/>
+
         <service id="fos_comment.form_type.thread.default" class="FOS\CommentBundle\Form\ThreadType">
             <argument>%fos_comment.model.thread.class%</argument>
             <tag name="form.type" alias="fos_comment_thread" extended-type="FOS\CommentBundle\Form\ThreadType" />
@@ -58,6 +64,8 @@
             <argument>%fos_comment.form.thread.name%</argument>
         </service>
 
+        <service id="FOS\CommentBundle\FormFactory\ThreadFormFactoryInterface" alias="fos_comment.form_factory.thread.default"/>
+
         <service id="fos_comment.form_type.vote.default" class="FOS\CommentBundle\Form\VoteType">
             <argument>%fos_comment.model.vote.class%</argument>
             <tag name="form.type" alias="fos_comment_vote" extended-type="FOS\CommentBundle\Form\VoteType" />
@@ -68,6 +76,8 @@
             <argument>%fos_comment.form.vote.type%</argument>
             <argument>%fos_comment.form.vote.name%</argument>
         </service>
+
+        <service id="FOS\CommentBundle\FormFactory\VoteFormFactoryInterface" alias="fos_comment.form_factory.vote.default"/>
 
     </services>
 

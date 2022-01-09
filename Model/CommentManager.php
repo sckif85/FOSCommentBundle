@@ -13,13 +13,12 @@ namespace FOS\CommentBundle\Model;
 
 use FOS\CommentBundle\Event\CommentEvent;
 use FOS\CommentBundle\Event\CommentPersistEvent;
-use FOS\CommentBundle\Event\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use FOS\CommentBundle\Events;
 use FOS\CommentBundle\Sorting\SortingFactory;
 use FOS\CommentBundle\Sorting\SortingInterface;
 use InvalidArgumentException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\LegacyEventDispatcherProxy;
 
 /**
  * Abstract Comment Manager implementation which can be used as base class for your
@@ -29,25 +28,13 @@ use Symfony\Component\EventDispatcher\LegacyEventDispatcherProxy;
  */
 abstract class CommentManager implements CommentManagerInterface
 {
-    /**
-     * @var SortingFactory
-     */
-    protected $sortingFactory;
+    protected SortingFactory $sortingFactory;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
+    protected EventDispatcherInterface $dispatcher;
 
-    /**
-     * Constructor.
-     *
-     * @param EventDispatcherInterface $dispatcher A dispatcher instance
-     * @param SortingFactory           $factory    A factory instance
-     */
     public function __construct(EventDispatcherInterface $dispatcher, SortingFactory $factory)
     {
-        $this->dispatcher = class_exists(LegacyEventDispatcherProxy::class) ? LegacyEventDispatcherProxy::decorate($dispatcher) : $dispatcher;
+        $this->dispatcher     = $dispatcher;
         $this->sortingFactory = $factory;
     }
 
@@ -56,7 +43,7 @@ abstract class CommentManager implements CommentManagerInterface
      */
     public function createComment(ThreadInterface $thread, CommentInterface $parent = null)
     {
-        $class = $this->getClass();
+        $class   = $this->getClass();
         $comment = new $class();
 
         $comment->setThread($thread);
@@ -77,7 +64,7 @@ abstract class CommentManager implements CommentManagerInterface
     public function findCommentTreeByThread(ThreadInterface $thread, $sorter = null, $depth = null)
     {
         $comments = $this->findCommentsByThread($thread, $depth);
-        $sorter = $this->sortingFactory->getSorter($sorter);
+        $sorter   = $this->sortingFactory->getSorter($sorter);
 
         return $this->organiseComments($comments, $sorter);
     }
@@ -149,14 +136,7 @@ abstract class CommentManager implements CommentManagerInterface
      */
     protected function dispatch(Event $event, $eventName)
     {
-        // LegacyEventDispatcherProxy exists in Symfony >= 4.3
-        if (class_exists(LegacyEventDispatcherProxy::class)) {
-            // New Symfony 4.3 EventDispatcher signature
-            $this->dispatcher->dispatch($event, $eventName);
-        } else {
-            // Old EventDispatcher signature
-            $this->dispatcher->dispatch($eventName, $event);
-        }
+        $this->dispatcher->dispatch($event, $eventName);
     }
 
     /**
